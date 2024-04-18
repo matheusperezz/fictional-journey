@@ -1,10 +1,10 @@
-package com.example.testeapp.data.datasources
+package com.example.testeapp.domain.usecases
 
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
 import kotlinx.coroutines.flow.Flow
 
-interface RemoteTrainingDataSource {
+interface TrainingUseCase {
   suspend fun addTraining(training: Training): String
   suspend fun getTrainings(): Flow<List<Training>>
   suspend fun getTrainingById(id: String): Training

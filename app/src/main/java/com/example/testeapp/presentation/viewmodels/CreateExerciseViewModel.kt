@@ -1,19 +1,23 @@
 package com.example.testeapp.presentation.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.usecases.ExerciseUseCase
+import com.example.testeapp.utils.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CreateExerciseUiState(
-  val name: String = "",
-  val observations: String = "",
-  val image: String = "",
+  var name: String = "",
+  var observations: String = "",
+  var image: String = "",
   val onNameChange: (String) -> Unit = {},
   val onObservationsChange: (String) -> Unit = {},
   val onImageChange: (String) -> Unit = {},
@@ -51,6 +55,33 @@ class CreateExerciseViewModel @Inject constructor(
     )
     viewModelScope.launch {
       useCase.addExercise(exercise)
+    }
+  }
+
+  fun getExerciseById(id: String) {
+    viewModelScope.launch {
+      try {
+        val exercise = useCase.getExerciseById(id)
+        _uiState.value = _uiState.value.copy(
+          name = exercise.name,
+          observations = exercise.observations,
+          image = exercise.image
+        )
+      } catch (e: Exception) {
+        Log.e(TAG, e.message.toString())
+      }
+    }
+  }
+
+  fun updateExercise(exerciseId: String) {
+    val exercise = Exercise(
+      id = exerciseId,
+      name = _uiState.value.name,
+      image = _uiState.value.image,
+      observations = _uiState.value.observations
+    )
+    viewModelScope.launch {
+      useCase.updateExercise(exercise)
     }
   }
 

@@ -20,6 +20,7 @@ import com.example.testeapp.presentation.navigation.TesteAppNavHost
 import com.example.testeapp.presentation.navigation.exercise.createExerciseRoute
 import com.example.testeapp.presentation.navigation.exercise.exerciseDetailsRoute
 import com.example.testeapp.presentation.navigation.exercise.exerciseGraphRoute
+import com.example.testeapp.presentation.navigation.exercise.exerciseIdArgument
 import com.example.testeapp.presentation.navigation.exercise.exerciseListRoute
 import com.example.testeapp.presentation.navigation.exercise.navigateToCreateExercise
 import com.example.testeapp.presentation.navigation.profile.profileResumeRoute
@@ -33,7 +34,7 @@ import com.example.testeapp.utils.TAG
 enum class NavigationType {
   EXERCISE,
   TRAINING,
-  PROFILE
+  PROFILE,
 }
 
 @Composable
@@ -53,7 +54,7 @@ fun TesteApp(
       else -> NavigationType.EXERCISE
     }
     val isShowFab = when (currentRoute) {
-      profileResumeRoute, createTrainingRoute, createExerciseRoute -> false
+      profileResumeRoute, createTrainingRoute, createExerciseRoute, "$trainingDetailsRoute/{}", "$exerciseDetailsRoute/{$exerciseIdArgument}" -> false
       else -> true
     }
 

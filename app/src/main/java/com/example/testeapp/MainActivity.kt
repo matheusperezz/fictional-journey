@@ -5,11 +5,14 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,7 +20,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.testeapp.domain.entities.Training
+import com.example.testeapp.presentation.components.BottomBarNavigation
+import com.example.testeapp.presentation.navigation.TesteAppNavHost
 import com.example.testeapp.presentation.theme.TesteAppTheme
 import com.example.testeapp.presentation.viewmodels.TrainingUiState
 import com.example.testeapp.presentation.viewmodels.TrainingViewModel
@@ -39,46 +49,18 @@ class MainActivity : ComponentActivity() {
       TesteAppTheme {
         val viewmodel: TrainingViewModel by viewModels()
         val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
-        viewmodel.getTrainings()
         Surface(
           modifier = Modifier.fillMaxSize(),
           color = MaterialTheme.colorScheme.background
         ) {
-          when (uiState) {
-            is TrainingUiState.Loading -> {
-              CircularProgressIndicator()
-            }
-
-            is TrainingUiState.Error -> {
-              val e = (uiState as TrainingUiState.Error).message
-              Greeting(name = e)
-            }
-
-            is TrainingUiState.Success -> {
-              val trainings = (uiState as TrainingUiState.Success).trainings
-              if (trainings.isEmpty()) {
-                Greeting(name = "lista vazia")
-              } else {
-                Column {
-                  for (e in trainings) {
-                    Greeting(name = e.id)
-                  }
-                  Button(onClick = {
-                    viewmodel.addTraining(Training("", "teste", "teste", Timestamp.now(), listOf(
-                      "asdf", "idligado"
-                    )))
-                  }) {
-                    Text(text = "Adicionar")
-                  }
-
-                  Button(onClick = {
-
-                  }) {
-                    Text(text = "Pegar o id")
-                  }
-                }
-              }
-            }
+          val navController = rememberNavController()
+          val navBackStackEntry by navController.currentBackStackEntryAsState()
+          val currentDestination = navBackStackEntry?.destination
+          TesteApp(
+            navController = navController,
+            currentDestination = currentDestination
+          ) {
+            TesteAppNavHost(navController = navController)
           }
         }
       }
@@ -87,17 +69,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-  Text(
-    text = "Hello $name!",
-    modifier = modifier
-  )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-  TesteAppTheme {
-    Greeting("Android")
+fun TesteApp(
+  navController: NavHostController,
+  currentDestination: NavDestination?,
+  content: @Composable () -> Unit
+) {
+  Scaffold(
+    bottomBar = {
+      BottomBarNavigation(
+        currentDestination = currentDestination,
+        navHostController = navController
+      )
+    }
+  ) {
+    Box(modifier = Modifier.padding(it)){
+      content()
+    }
   }
 }

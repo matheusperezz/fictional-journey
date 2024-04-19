@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.testeapp.domain.entities.Training
 import com.example.testeapp.presentation.components.BottomBarNavigation
+import com.example.testeapp.presentation.components.TesteApp
 import com.example.testeapp.presentation.navigation.TesteAppNavHost
 import com.example.testeapp.presentation.theme.TesteAppTheme
 import com.example.testeapp.presentation.viewmodels.TrainingUiState
@@ -35,10 +36,8 @@ import com.example.testeapp.utils.TAG
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 
-
 // TODO: Separar as viewmodels durante o formulário de criação de treino
 // TODO: Criar um formulário de criação de treino com lista de exercícios
-// TODO: Não será necessário BottomNav
 // TODO: Criar um formulário de criação de exercício como bottomFragment
 // TODO: Talvez tela de login?
 @AndroidEntryPoint
@@ -47,8 +46,6 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       TesteAppTheme {
-        val viewmodel: TrainingViewModel by viewModels()
-        val uiState by viewmodel.uiState.collectAsStateWithLifecycle()
         Surface(
           modifier = Modifier.fillMaxSize(),
           color = MaterialTheme.colorScheme.background
@@ -59,31 +56,10 @@ class MainActivity : ComponentActivity() {
           TesteApp(
             navController = navController,
             currentDestination = currentDestination
-          ) {
-            TesteAppNavHost(navController = navController)
-          }
+          )
         }
       }
     }
   }
 }
 
-@Composable
-fun TesteApp(
-  navController: NavHostController,
-  currentDestination: NavDestination?,
-  content: @Composable () -> Unit
-) {
-  Scaffold(
-    bottomBar = {
-      BottomBarNavigation(
-        currentDestination = currentDestination,
-        navHostController = navController
-      )
-    }
-  ) {
-    Box(modifier = Modifier.padding(it)){
-      content()
-    }
-  }
-}

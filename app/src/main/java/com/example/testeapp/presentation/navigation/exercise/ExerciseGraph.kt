@@ -14,6 +14,8 @@ fun NavGraphBuilder.exerciseGraph(navHostController: NavHostController) {
         route = exerciseGraphRoute
     ) {
         exerciseListScreen(navHostController)
+        createExerciseScreen(navHostController)
+        exerciseDetailsScreen(navHostController)
     }
 }
 

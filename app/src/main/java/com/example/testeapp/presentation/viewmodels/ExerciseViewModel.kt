@@ -38,6 +38,10 @@ class ExerciseViewModel @Inject constructor(
     }
   }
 
+  init {
+    getExercises()
+  }
+
   fun addExercise(exercise: Exercise) = viewModelScope.launch {
     _uiState.value = ExerciseUiState.Loading
     try {

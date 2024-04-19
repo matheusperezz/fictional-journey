@@ -46,18 +46,13 @@ class MainActivity : ComponentActivity() {
     super.onCreate(savedInstanceState)
     setContent {
       TesteAppTheme {
-        Surface(
-          modifier = Modifier.fillMaxSize(),
-          color = MaterialTheme.colorScheme.background
-        ) {
-          val navController = rememberNavController()
-          val navBackStackEntry by navController.currentBackStackEntryAsState()
-          val currentDestination = navBackStackEntry?.destination
-          TesteApp(
-            navController = navController,
-            currentDestination = currentDestination
-          )
-        }
+        val navController = rememberNavController()
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
+        TesteApp(
+          navController = navController,
+          currentDestination = currentDestination
+        )
       }
     }
   }

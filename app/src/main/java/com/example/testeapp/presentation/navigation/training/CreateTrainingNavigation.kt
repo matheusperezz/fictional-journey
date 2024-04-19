@@ -16,5 +16,5 @@ fun NavGraphBuilder.createTrainingScreen(navHostController: NavHostController) {
 }
 
 fun NavController.navigateToCreateTraining(navOptions: NavOptions? = null) {
-  navigate(trainingListRoute, navOptions)
+  navigate(createTrainingRoute, navOptions)
 }

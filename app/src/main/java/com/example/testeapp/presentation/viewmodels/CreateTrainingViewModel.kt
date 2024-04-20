@@ -23,6 +23,7 @@ data class CreateTrainingUiState(
   val onNameChange: (String) -> Unit = {},
   val onDescriptionChange: (String) -> Unit = {},
 
+  val exercises: List<Exercise> = emptyList(),
   val trainingExercises: MutableList<Exercise> = mutableListOf(),
   val addExercise: (Exercise) -> Unit = { exercise ->
     trainingExercises.add(exercise)
@@ -67,6 +68,7 @@ class CreateTrainingViewModel @Inject constructor(
       }
     )
     loadExercises()
+    getExercises()
   }
 
   private fun loadExercises() {
@@ -96,6 +98,46 @@ class CreateTrainingViewModel @Inject constructor(
         exercises = _uiState.value.trainingExercises.map { it.id }
       )
       trainingUseCase.addTraining(training)
+    }
+  }
+
+  fun getExercises(){
+    viewModelScope.launch {
+      _uiState.value = _uiState.value.copy(
+        exercises = exerciseUseCase.getExercises().first()
+      )
+    }
+  }
+
+  fun updateTraining(trainingId: String){
+    val training = Training(
+      id = trainingId,
+      name = _uiState.value.name,
+      description = _uiState.value.description,
+      date = Timestamp(_uiState.value.date)
+    )
+    viewModelScope.launch {
+      trainingUseCase.updateTraining(training)
+    }
+  }
+
+  fun enrollExerciseOnTraining(trainingId: String, exerciseId: String){
+    viewModelScope.launch {
+      trainingUseCase.enrollExerciseInTraining(trainingId, exerciseId)
+      val training = trainingUseCase.getTrainingById(trainingId)
+      _uiState.value = _uiState.value.copy(
+        trainingExercises = training.exercises.toMutableList()
+      )
+    }
+  }
+
+  fun unrollExerciseOnTraining(trainingId: String, exerciseId: String){
+    viewModelScope.launch {
+      trainingUseCase.unrollExerciseInTraining(trainingId, exerciseId)
+      val training = trainingUseCase.getTrainingById(trainingId)
+      _uiState.value = _uiState.value.copy(
+        trainingExercises = training.exercises.toMutableList()
+      )
     }
   }
 

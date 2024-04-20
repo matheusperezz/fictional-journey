@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -112,6 +113,7 @@ fun ExerciseList(exercises: List<Exercise>, onExerciseClick: (Exercise) -> Unit 
 @Composable
 fun ExerciseItem(
   exercise: Exercise,
+  size: Dp = 120.dp,
   onExerciseClick: (Exercise) -> Unit = {},
   onLongClick: (Exercise) -> Unit = {}
 ) {
@@ -131,7 +133,7 @@ fun ExerciseItem(
         placeholder = painterResource(id = R.drawable.ic_fitness_center),
         error = painterResource(id = R.drawable.ic_fitness_center),
         contentScale = ContentScale.Crop,
-        modifier = Modifier.size(120.dp),
+        modifier = Modifier.size(size),
       )
 
       Column(

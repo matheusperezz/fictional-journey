@@ -1,6 +1,7 @@
 package com.example.testeapp.domain.entities
 
 import com.google.firebase.Timestamp
+import java.util.Date
 
 data class Training(
   val id: String = "",
@@ -14,7 +15,7 @@ data class TrainingPresentation(
   val id: String = "",
   val name: String = "",
   val description: String = "",
-  val date: String = "",
+  val date: Date = Date(),
   val exercises: List<Exercise> = emptyList()
 )
 

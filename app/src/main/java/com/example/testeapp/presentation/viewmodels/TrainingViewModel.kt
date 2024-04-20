@@ -45,6 +45,10 @@ class TrainingViewModel @Inject constructor(
     }
   }
 
+  init {
+    getTrainings()
+  }
+
   fun addTraining(training: Training) = viewModelScope.launch {
     _uiState.value = TrainingUiState.Loading
     try {
@@ -87,26 +91,6 @@ class TrainingViewModel @Inject constructor(
       } catch (e: Exception) {
         _uiState.value = TrainingUiState.Error(e.message.toString())
       }
-    }
-  }
-
-  fun enrollExerciseInTraining(trainingId: String, exerciseId: String) = viewModelScope.launch {
-    _uiState.value = TrainingUiState.Loading
-    try {
-      useCase.enrollExerciseInTraining(trainingId, exerciseId)
-      _uiState.value = TrainingUiState.Success(useCase.getTrainings().first())
-    } catch (e: Exception) {
-      _uiState.value = TrainingUiState.Error(e.message.toString())
-    }
-  }
-
-  fun unrollExerciseInTraining(trainingId: String, exerciseId: String) = viewModelScope.launch {
-    _uiState.value = TrainingUiState.Loading
-    try {
-      useCase.unrollExerciseInTraining(trainingId, exerciseId)
-      _uiState.value = TrainingUiState.Success(useCase.getTrainings().first())
-    } catch (e: Exception) {
-      _uiState.value = TrainingUiState.Error(e.message.toString())
     }
   }
 }

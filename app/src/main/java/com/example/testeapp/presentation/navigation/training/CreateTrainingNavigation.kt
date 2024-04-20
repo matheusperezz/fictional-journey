@@ -11,7 +11,9 @@ const val createTrainingRoute = "createTraining"
 
 fun NavGraphBuilder.createTrainingScreen(navHostController: NavHostController) {
   composable(createTrainingRoute) {
-    CreateTrainingSreen()
+    CreateTrainingSreen(
+      navHostController = navHostController
+    )
   }
 }
 

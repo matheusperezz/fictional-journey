@@ -46,7 +46,7 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
           id = training.id,
           name = training.name,
           description = training.description,
-          date = training.date.toDate().toString(),
+          date = training.date.toDate(),
           exercises = exercises
         )
       }
@@ -65,14 +65,30 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
       id = training.id,
       name = training.name,
       description = training.description,
-      date = training.date.toDate().toString(),
+      date = training.date.toDate(),
       exercises = exercises
     )
   }
 
   override suspend fun deleteTraining(id: String): String {
+    val document = firestore.collection(TRAINING_COLLECTION).document(id)
+    val exerciseIds = firestore.collection(TRAINING_EXERCISE_COLLECTION)
+      .get()
+      .await()
+      .documents
+      .mapNotNull { document ->
+        if (document.getString("trainingId") == id){
+          document.getString("exerciseId") as String
+        } else {
+          null
+        }
+      }
+    exerciseIds.forEach { exerciseId ->
+      unrollExerciseInTraining(id, exerciseId)
+    }
+
     return try {
-      firestore.collection(TRAINING_COLLECTION).document(id).delete().await()
+      document.delete().await()
       "Training deleted successfully"
     } catch (e: Exception) {
       e.message.toString()

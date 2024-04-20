@@ -15,7 +15,7 @@ class TrainingDataMapper @Inject constructor(
       id = training.id,
       name = training.name,
       description = training.description,
-      date = training.date.toDate().toString(),
+      date = training.date.toDate(),
       exercises = exercises
     )
   }

@@ -33,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.example.testeapp.R
 import com.example.testeapp.domain.entities.Exercise
+import com.example.testeapp.presentation.components.LoadingScreen
 import com.example.testeapp.presentation.viewmodels.ExerciseUiState
 import com.example.testeapp.presentation.viewmodels.ExerciseViewModel
 
@@ -52,13 +53,7 @@ fun ExerciseListScreen(
 
   when (uiState) {
     is ExerciseUiState.Loading -> {
-      Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxSize()
-      ) {
-        CircularProgressIndicator(modifier = Modifier.size(120.dp))
-      }
+      LoadingScreen()
     }
 
     is ExerciseUiState.Error -> {

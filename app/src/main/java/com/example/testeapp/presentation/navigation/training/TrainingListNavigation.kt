@@ -11,7 +11,11 @@ const val trainingListRoute = "trainingList"
 
 fun NavGraphBuilder.trainingListScreen(navHostController: NavHostController) {
     composable(trainingListRoute) {
-        TrainingListScreen()
+        TrainingListScreen(onTrainingClick = { training ->
+            navHostController.navigateToTrainingDetails(
+                id = training.id
+            )
+        })
     }
 }
 

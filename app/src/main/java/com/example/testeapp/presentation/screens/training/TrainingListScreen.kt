@@ -11,12 +11,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -33,10 +38,13 @@ import com.google.firebase.Timestamp
 
 @Composable
 fun TrainingListScreen(
-  viewModel: TrainingViewModel = hiltViewModel()
+  viewModel: TrainingViewModel = hiltViewModel(),
+  onTrainingClick: (TrainingPresentation) -> Unit = {}
 ) {
 
   val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  var showDialog by remember { mutableStateOf(false) }
+  var currentLongPressedTraining by remember { mutableStateOf("") }
 
   LaunchedEffect(Unit) {
     viewModel.getTrainings()
@@ -49,9 +57,37 @@ fun TrainingListScreen(
 
     is TrainingUiState.Success -> {
       val trainings = (uiState as TrainingUiState.Success).trainings
-      TrainingList(trainings, onLongTrainingClick = { training ->
-        viewModel.deleteTraining(training.id)
+      TrainingList(trainings, onTrainingClick = onTrainingClick, onLongTrainingClick = { training ->
+        currentLongPressedTraining = training.id
+        showDialog = true
       })
+
+      if (showDialog){
+        AlertDialog(
+          onDismissRequest = { showDialog = false },
+          confirmButton = {
+            TextButton(onClick = {
+              viewModel.deleteTraining(currentLongPressedTraining)
+              showDialog = false
+            }) {
+              Text(text = "Excluir")
+            }
+          },
+          dismissButton = {
+            TextButton(onClick = {
+              showDialog = false
+            }) {
+              Text(text = "Cancelar")
+            }
+          },
+          title = {
+            Text(text = "Excluir treino")
+          },
+          text = {
+            Text(text = "Deseja excluir o treino?")
+          },
+        )
+      }
     }
 
     is TrainingUiState.Error -> {

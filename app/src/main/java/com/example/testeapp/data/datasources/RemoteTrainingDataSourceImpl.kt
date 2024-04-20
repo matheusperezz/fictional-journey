@@ -3,14 +3,15 @@ package com.example.testeapp.data.datasources
 import android.util.Log
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
+import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.entities.trainingToHashMap
-import com.example.testeapp.utils.EXERCISE_COLLECTION
 import com.example.testeapp.utils.TAG
 import com.example.testeapp.utils.TRAINING_COLLECTION
 import com.example.testeapp.utils.TRAINING_EXERCISE_COLLECTION
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.tasks.await
@@ -30,7 +31,7 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
     }
   }
 
-  override suspend fun getTrainings(): Flow<List<Training>> {
+  override suspend fun getTrainings(): Flow<List<TrainingPresentation>> {
     return try {
       val trainings = firestore.collection(TRAINING_COLLECTION)
         .get()
@@ -39,16 +40,34 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
         .mapNotNull { document ->
           document.toObject<Training>()?.copy(id = document.id)
         }
-      flowOf(trainings)
+      val mappedTrainings = trainings.map { training ->
+        val exercises = getExercisesFromTrainig(training.id).first()
+        TrainingPresentation(
+          id = training.id,
+          name = training.name,
+          description = training.description,
+          date = training.date.toDate().toString(),
+          exercises = exercises
+        )
+      }
+      flowOf(mappedTrainings)
     } catch (e: Exception) {
       Log.e(TAG, e.message.toString())
       flowOf(emptyList())
     }
   }
 
-  override suspend fun getTrainingById(id: String): Training {
+  override suspend fun getTrainingById(id: String): TrainingPresentation {
     val document = firestore.collection(TRAINING_COLLECTION).document(id).get().await()
-    return document.toObject<Training>()?.copy(id = document.id) ?: Training()
+    val training = document.toObject<Training>()?.copy(id = document.id) ?: Training()
+    val exercises = getExercisesFromTrainig(training.id).first()
+    return TrainingPresentation(
+      id = training.id,
+      name = training.name,
+      description = training.description,
+      date = training.date.toDate().toString(),
+      exercises = exercises
+    )
   }
 
   override suspend fun deleteTraining(id: String): String {
@@ -74,17 +93,20 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
     return flow {
       val exercises = mutableListOf<Exercise>()
       val exerciseIds = firestore.collection(TRAINING_EXERCISE_COLLECTION)
-        .whereEqualTo("trainingId", trainingId)
         .get()
         .await()
         .documents
-        .map { it.getString("exerciseId") ?: "" }
-      Log.d(TAG, "getExercisesFromTrainig: $exerciseIds")
+        .mapNotNull { document ->
+          if (document.getString("trainingId") == trainingId){
+            document.getString("exerciseId") as String
+          } else {
+            null
+          }
+        }
       for (id in exerciseIds) {
         val exercise = remoteExerciseDataSource.getExerciseById(id)
         exercises.add(exercise)
       }
-      Log.d(TAG, "getExercisesFromTrainig: $exercises")
       emit(exercises)
     }
   }

@@ -10,6 +10,14 @@ data class Training(
   val exercises: List<String> = emptyList()
 )
 
+data class TrainingPresentation(
+  val id: String = "",
+  val name: String = "",
+  val description: String = "",
+  val date: String = "",
+  val exercises: List<Exercise> = emptyList()
+)
+
 fun trainingToHashMap(training: Training): HashMap<String, Any> {
   return hashMapOf(
     "name" to training.name,

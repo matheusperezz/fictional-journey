@@ -2,12 +2,13 @@ package com.example.testeapp.domain.repositories
 
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
+import com.example.testeapp.domain.entities.TrainingPresentation
 import kotlinx.coroutines.flow.Flow
 
 interface TrainingRepository {
   suspend fun addTraining(training: Training): String
-  suspend fun getTrainings(): Flow<List<Training>>
-  suspend fun getTrainingById(id: String): Training
+  suspend fun getTrainings(): Flow<List<TrainingPresentation>>
+  suspend fun getTrainingById(id: String): TrainingPresentation
   suspend fun deleteTraining(id: String): String
   suspend fun updateTraining(training: Training): String
   suspend fun getExercisesFromTrainig(trainingId: String): Flow<List<Exercise>>

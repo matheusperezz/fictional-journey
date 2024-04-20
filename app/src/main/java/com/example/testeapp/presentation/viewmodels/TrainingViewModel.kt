@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
+import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.usecases.TrainingUseCase
 import com.example.testeapp.utils.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import kotlin.math.log
 
 sealed class TrainingUiState {
   object Loading : TrainingUiState()
-  data class Success(val trainings: List<Training>) :
+  data class Success(val trainings: List<TrainingPresentation>) :
     TrainingUiState()
 
   data class Error(val message: String) : TrainingUiState()
@@ -54,7 +55,7 @@ class TrainingViewModel @Inject constructor(
     }
   }
 
-  fun getTrainingById(id: String, callback: (Training) -> Unit) {
+  fun getTrainingById(id: String, callback: (TrainingPresentation) -> Unit) {
     viewModelScope.launch {
       try {
         val training = useCase.getTrainingById(id)

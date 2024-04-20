@@ -3,6 +3,7 @@ package com.example.testeapp.data.repositories
 import com.example.testeapp.data.datasources.RemoteTrainingDataSource
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
+import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.repositories.TrainingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -14,11 +15,11 @@ class TrainingRepositoryImpl @Inject constructor(
     return remoteTrainingDataSource.addTraining(training)
   }
 
-  override suspend fun getTrainings(): Flow<List<Training>> {
+  override suspend fun getTrainings(): Flow<List<TrainingPresentation>> {
     return remoteTrainingDataSource.getTrainings()
   }
 
-  override suspend fun getTrainingById(id: String): Training {
+  override suspend fun getTrainingById(id: String): TrainingPresentation {
     return remoteTrainingDataSource.getTrainingById(id)
   }
 

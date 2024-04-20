@@ -2,6 +2,7 @@ package com.example.testeapp.domain.usecases
 
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
+import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.repositories.TrainingRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -13,11 +14,11 @@ class TrainingUseCaseImpl @Inject constructor(
     return trainingRepository.addTraining(training)
   }
 
-  override suspend fun getTrainings(): Flow<List<Training>> {
+  override suspend fun getTrainings(): Flow<List<TrainingPresentation>> {
     return trainingRepository.getTrainings()
   }
 
-  override suspend fun getTrainingById(id: String): Training {
+  override suspend fun getTrainingById(id: String): TrainingPresentation {
     return trainingRepository.getTrainingById(id)
   }
 

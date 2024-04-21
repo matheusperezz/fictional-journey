@@ -36,10 +36,8 @@ import com.example.testeapp.utils.TAG
 import com.google.firebase.Timestamp
 import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Separar as viewmodels durante o formulário de criação de treino
-// TODO: Criar um formulário de criação de treino com lista de exercícios
-// TODO: Criar um formulário de criação de exercício como bottomFragment
-// TODO: Talvez tela de login?
+// TODO: Melhorar o layout ao adicionar exercícios no treino
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {

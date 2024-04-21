@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,7 +26,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,7 +38,10 @@ import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.presentation.components.LoadingScreen
 import com.example.testeapp.presentation.viewmodels.TrainingUiState
 import com.example.testeapp.presentation.viewmodels.TrainingViewModel
+import com.example.testeapp.utils.dateMapper
 import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun TrainingListScreen(
@@ -62,7 +69,7 @@ fun TrainingListScreen(
         showDialog = true
       })
 
-      if (showDialog){
+      if (showDialog) {
         AlertDialog(
           onDismissRequest = { showDialog = false },
           confirmButton = {
@@ -104,6 +111,7 @@ fun TrainingList(
 ) {
   LazyColumn(
     verticalArrangement = spacedBy(8.dp),
+    modifier = Modifier.padding(8.dp)
   ) {
     items(trainings) { training ->
       TrainingItem(training, onTrainingClick, onLongTrainingClick)
@@ -125,21 +133,35 @@ fun TrainingItem(
       onLongClick = { onLongTrainingClick(training) }
     )) {
     Column(
-      modifier = Modifier.padding(8.dp)
+      modifier = Modifier
+        .padding(8.dp)
+        .fillMaxWidth(),
+      verticalArrangement = spacedBy(4.dp)
     ) {
-      Text(text = training.name, style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold))
-      Text(text = training.description)
-      Text(text = training.date.toString())
-      if (training.exercises.isNotEmpty()) {
-        Text(text = "Exercicios:")
-        training.exercises.forEach { exercise ->
-          if (exercise.id != ""){
-            Text(text = exercise.name)
-          }
-        }
-      } else {
-        Text(text = "Sem exercícios cadastrados")
-      }
+
+      Text(
+        text = training.name,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.fillMaxWidth()
+      )
+
+      Text(
+        text = training.description,
+        maxLines = 4,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.fillMaxWidth()
+      )
+
+      Text(
+        text = dateMapper(training.date),
+        fontStyle = FontStyle.Italic,
+        textAlign = TextAlign.End,
+        fontSize = 12.sp,
+        modifier = Modifier.fillMaxWidth()
+      )
     }
   }
 }

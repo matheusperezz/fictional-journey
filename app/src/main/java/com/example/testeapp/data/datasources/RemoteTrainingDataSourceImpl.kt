@@ -121,7 +121,9 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
         }
       for (id in exerciseIds) {
         val exercise = remoteExerciseDataSource.getExerciseById(id)
-        exercises.add(exercise)
+        if (exercise.name != ""){
+          exercises.add(exercise)
+        }
       }
       emit(exercises)
     }

@@ -49,16 +49,6 @@ class TrainingViewModel @Inject constructor(
     getTrainings()
   }
 
-  fun addTraining(training: Training) = viewModelScope.launch {
-    _uiState.value = TrainingUiState.Loading
-    try {
-      useCase.addTraining(training)
-      _uiState.value = TrainingUiState.Success(useCase.getTrainings().first())
-    } catch (e: Exception) {
-      _uiState.value = TrainingUiState.Error(e.message.toString())
-    }
-  }
-
   fun getTrainingById(id: String, callback: (TrainingPresentation) -> Unit) {
     viewModelScope.launch {
       try {
@@ -66,18 +56,6 @@ class TrainingViewModel @Inject constructor(
         callback(training)
       } catch (e: Exception) {
         Log.e(TAG, e.message.toString())
-      }
-    }
-  }
-
-  fun updateTraining(training: Training) {
-    _uiState.value = TrainingUiState.Loading
-    viewModelScope.launch {
-      try {
-        useCase.updateTraining(training)
-        _uiState.value = TrainingUiState.Success(useCase.getTrainings().first())
-      } catch (e: Exception) {
-        _uiState.value = TrainingUiState.Error(e.message.toString())
       }
     }
   }

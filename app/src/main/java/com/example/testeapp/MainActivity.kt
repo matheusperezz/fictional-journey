@@ -10,6 +10,7 @@ import com.example.testeapp.presentation.components.TesteApp
 import com.example.testeapp.presentation.theme.TesteAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+// TODO: Implementar telas de login
 // TODO: Adicionar fluxo de login
 // TODO: Implementar o fluxo de login com o firebase
 

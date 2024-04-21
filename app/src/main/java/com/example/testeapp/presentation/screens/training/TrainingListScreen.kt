@@ -133,7 +133,9 @@ fun TrainingItem(
       if (training.exercises.isNotEmpty()) {
         Text(text = "Exercicios:")
         training.exercises.forEach { exercise ->
-          Text(text = exercise.name)
+          if (exercise.id != ""){
+            Text(text = exercise.name)
+          }
         }
       } else {
         Text(text = "Sem exercícios cadastrados")

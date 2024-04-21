@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,8 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -70,7 +75,7 @@ fun ExerciseListScreen(
         currentLongPressedExercise = it.id
         showDialog = true
       })
-      if (showDialog){
+      if (showDialog) {
         AlertDialog(
           onDismissRequest = { showDialog = false },
           confirmButton = {
@@ -101,10 +106,23 @@ fun ExerciseListScreen(
 }
 
 @Composable
-fun ExerciseList(exercises: List<Exercise>, onExerciseClick: (Exercise) -> Unit = {}, onLongClick: (Exercise) -> Unit = {}) {
-  LazyColumn {
+fun ExerciseList(
+  exercises: List<Exercise>,
+  onExerciseClick: (Exercise) -> Unit = {},
+  onLongClick: (Exercise) -> Unit = {}
+) {
+  LazyColumn(
+    verticalArrangement = spacedBy(8.dp),
+    modifier = Modifier
+      .padding(horizontal = 8.dp)
+      .padding(top = 8.dp)
+  ) {
     items(exercises) { exercise ->
-      ExerciseItem(exercise = exercise, onExerciseClick = onExerciseClick, onLongClick = onLongClick)
+      ExerciseItem(
+        exercise = exercise,
+        onExerciseClick = onExerciseClick,
+        onLongClick = onLongClick
+      )
     }
   }
 }
@@ -137,11 +155,22 @@ fun ExerciseItem(
       )
 
       Column(
-        modifier = Modifier.padding(4.dp)
+        modifier = Modifier.padding(6.dp)
       ) {
-        Text(text = exercise.name)
-        Text(text = exercise.observations)
-        Text(text = exercise.id)
+        Text(
+          text = exercise.name,
+          style = TextStyle(
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+          ),
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis
+        )
+        Text(
+          text = exercise.observations,
+          maxLines = 3,
+          overflow = TextOverflow.Ellipsis
+        )
       }
     }
   }

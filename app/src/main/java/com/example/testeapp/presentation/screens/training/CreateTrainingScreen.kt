@@ -104,10 +104,12 @@ fun CreateTrainingSreen(
     ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
       LazyColumn {
         items(uiState.exercises) { exercise ->
-          ExerciseItem(exercise = exercise, size = 80.dp, onExerciseClick = {
-            viewModel.enrollExerciseOnTraining(trainingId, it.id)
-            showBottomSheet = false
-          })
+          if (exercise.id != ""){
+            ExerciseItem(exercise = exercise, size = 80.dp, onExerciseClick = {
+              viewModel.enrollExerciseOnTraining(trainingId, it.id)
+              showBottomSheet = false
+            })
+          }
         }
       }
     }

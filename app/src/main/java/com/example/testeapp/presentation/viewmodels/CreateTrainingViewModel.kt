@@ -101,7 +101,7 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  fun getExercises(){
+  private fun getExercises(){
     viewModelScope.launch {
       _uiState.value = _uiState.value.copy(
         exercises = exerciseUseCase.getExercises().first()

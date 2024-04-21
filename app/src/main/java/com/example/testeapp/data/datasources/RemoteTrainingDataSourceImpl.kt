@@ -76,9 +76,9 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
       .get()
       .await()
       .documents
-      .mapNotNull { document ->
-        if (document.getString("trainingId") == id){
-          document.getString("exerciseId") as String
+      .mapNotNull { doc ->
+        if (doc.getString("trainingId") == id){
+          doc.getString("exerciseId") as String
         } else {
           null
         }

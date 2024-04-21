@@ -54,14 +54,14 @@ fun TesteApp(
   ) {
 
     val currentRoute = currentDestination?.route
-    val navType = when (currentRoute){
+    val navType = when (currentRoute) {
       trainingListRoute, trainingDetailsRoute, createTrainingRoute -> NavigationType.TRAINING
       profileResumeRoute -> NavigationType.PROFILE
       else -> NavigationType.EXERCISE
     }
     val isShowFab = when (currentRoute) {
-      profileResumeRoute, createTrainingRoute, createExerciseRoute, "$trainingDetailsRoute/{}", "$exerciseDetailsRoute/{$exerciseIdArgument}" -> false
-      else -> true
+      trainingListRoute, exerciseListRoute -> true
+      else -> false
     }
 
     TesteAppStateful(
@@ -125,7 +125,10 @@ fun TesteAppStateful(
       }
     }
   ) {
-    Box(modifier = Modifier.padding(it)) {
+    Box(
+      modifier = Modifier
+        .padding(it)
+    ) {
       content()
     }
   }

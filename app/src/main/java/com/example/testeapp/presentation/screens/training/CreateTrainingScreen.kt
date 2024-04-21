@@ -2,9 +2,12 @@ package com.example.testeapp.presentation.screens.training
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -31,7 +34,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -84,22 +89,29 @@ fun CreateTrainingSreen(
 
     Row(
       verticalAlignment = Alignment.CenterVertically,
-      horizontalArrangement = Arrangement.Center,
+      horizontalArrangement = Arrangement.SpaceBetween,
       modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp)
         .clickable {
-          val calendar = Calendar.getInstance().apply {
-            timeInMillis = uiState.date.time
-            add(Calendar.DAY_OF_MONTH, -1)
-          }
+          val calendar = Calendar
+            .getInstance()
+            .apply {
+              timeInMillis = uiState.date.time
+              add(Calendar.DAY_OF_MONTH, -1)
+            }
           val time = calendar.timeInMillis
           datePickerState.setSelection(time)
           showDatePicker = true
         }
     ) {
-      Text(text = dateMapper(uiState.date))
-      Icon(imageVector = Icons.Rounded.DateRange, contentDescription = null)
+      Text(text = "Alterar data", color = MaterialTheme.colorScheme.primary)
+      Text(text = dateMapper(uiState.date), color = MaterialTheme.colorScheme.primary)
+      Icon(
+        imageVector = Icons.Rounded.DateRange,
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.primary
+      )
     }
 
     if (showDatePicker) {
@@ -125,7 +137,7 @@ fun CreateTrainingSreen(
 
     Row(
       modifier = Modifier
-        .padding(8.dp)
+        .padding(16.dp)
         .clickable { showBottomSheet = true }
     ) {
       Icon(
@@ -147,29 +159,49 @@ fun CreateTrainingSreen(
     } else {
       Text(text = "Nenhum exercício adicionado")
     }
-    Button(onClick = {
-      if (isUpdating) {
-        viewModel.updateTraining(trainingId)
-        navHostController.popBackStack()
-      } else {
-        viewModel.createTraining()
-        navHostController.popBackStack()
-      }
-    }) {
+    Button(
+      onClick = {
+        if (isUpdating) {
+          viewModel.updateTraining(trainingId)
+          navHostController.popBackStack()
+        } else {
+          viewModel.createTraining()
+          navHostController.popBackStack()
+        }
+      },
+      modifier = Modifier
+        .fillMaxWidth()
+        .padding(4.dp)
+    ) {
       Text(text = "Salvar")
     }
   }
 
   if (showBottomSheet) {
-    ModalBottomSheet(onDismissRequest = { showBottomSheet = false }, sheetState = sheetState) {
-      LazyColumn {
+    ModalBottomSheet(
+      onDismissRequest = { showBottomSheet = false },
+      sheetState = sheetState,
+    ) {
+      Spacer(modifier = Modifier.height(16.dp))
+      Text(
+        text = "Lista de exercícios",
+        fontSize = 20.sp,
+        modifier = Modifier.fillMaxWidth(),
+        textAlign = TextAlign.Center
+      )
+      Spacer(modifier = Modifier.height(16.dp))
+      LazyColumn(
+        verticalArrangement = spacedBy(8.dp),
+        modifier = Modifier.padding(16.dp)
+      ) {
         items(uiState.exercises) { exercise ->
-          ExerciseItem(exercise = exercise, size = 80.dp, onExerciseClick = {
+          TrainingExerciseItem(exercise = exercise, onExerciseClick = {
             viewModel.enrollExerciseOnTraining(trainingId, it.id)
             showBottomSheet = false
           })
         }
       }
+      Spacer(modifier = Modifier.height(16.dp))
     }
   }
 }

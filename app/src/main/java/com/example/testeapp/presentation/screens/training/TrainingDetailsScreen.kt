@@ -1,5 +1,6 @@
 package com.example.testeapp.presentation.screens.training
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,10 +121,16 @@ fun TrainingDetails(training: TrainingPresentation, onUpdateClick: () -> Unit) {
 }
 
 @Composable
-fun TrainingExerciseItem(exercise: Exercise, modifier: Modifier = Modifier) {
+fun TrainingExerciseItem(
+  exercise: Exercise,
+  modifier: Modifier = Modifier,
+  onExerciseClick: (Exercise) -> Unit = {}
+) {
   Row(
     horizontalArrangement = spacedBy(8.dp),
-    modifier = modifier.fillMaxWidth()
+    modifier = modifier
+      .fillMaxWidth()
+      .clickable { onExerciseClick(exercise) }
   ) {
     AsyncImage(
       model = exercise.image,
@@ -131,7 +138,9 @@ fun TrainingExerciseItem(exercise: Exercise, modifier: Modifier = Modifier) {
       placeholder = painterResource(id = R.drawable.imagenotfound),
       error = painterResource(id = R.drawable.imagenotfound),
       contentScale = ContentScale.Crop,
-      modifier = Modifier.size(100.dp).clip(RoundedCornerShape(4.dp)),
+      modifier = Modifier
+        .size(100.dp)
+        .clip(RoundedCornerShape(4.dp)),
     )
 
     Column {

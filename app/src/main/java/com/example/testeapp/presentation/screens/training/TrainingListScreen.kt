@@ -64,10 +64,26 @@ fun TrainingListScreen(
 
     is TrainingUiState.Success -> {
       val trainings = (uiState as TrainingUiState.Success).trainings
-      TrainingList(trainings, onTrainingClick = onTrainingClick, onLongTrainingClick = { training ->
-        currentLongPressedTraining = training.id
-        showDialog = true
-      })
+      if (trainings.isNotEmpty()){
+        TrainingList(trainings, onTrainingClick = onTrainingClick, onLongTrainingClick = { training ->
+          currentLongPressedTraining = training.id
+          showDialog = true
+        })
+      } else {
+        Text(
+          text = """
+            Nenhum treino cadastrado!
+            
+            Para adicionar, clique no botão no canto inferior direito.
+            
+            Para Excluir, segure o clique em cima do treino :)
+          """.trimIndent(),
+          textAlign = TextAlign.Center,
+          modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 32.dp)
+        )
+      }
 
       if (showDialog) {
         AlertDialog(

@@ -3,7 +3,6 @@ package com.example.testeapp.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.usecases.TrainingUseCase
 import com.example.testeapp.utils.TAG

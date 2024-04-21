@@ -7,7 +7,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.testeapp.presentation.screens.exercises.CreateExerciseScreen
-import com.example.testeapp.presentation.screens.exercises.ExerciseListScreen
 
 const val createExerciseRoute = "createExercise"
 const val createExerciseIdArgument = "createExerciseIdArg"

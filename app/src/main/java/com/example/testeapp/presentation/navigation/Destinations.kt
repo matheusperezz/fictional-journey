@@ -16,11 +16,9 @@ sealed class BottomAppBarItem(
 ) {
   object Exercise : BottomAppBarItem(exerciseGraphRoute, Icons.Rounded.Home, "Exercícios")
   object Training : BottomAppBarItem(trainingGraphRoute, Icons.Rounded.Build, "Treinos")
-  object Profile : BottomAppBarItem(profileGraphRoute, Icons.Rounded.Person, "Perfil")
 }
 
 val bottomAppBarItems = listOf(
   BottomAppBarItem.Exercise,
   BottomAppBarItem.Training,
-  BottomAppBarItem.Profile
 )

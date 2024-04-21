@@ -3,20 +3,14 @@ package com.example.testeapp.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.testeapp.domain.entities.Exercise
-import com.example.testeapp.domain.entities.Training
 import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.usecases.TrainingUseCase
 import com.example.testeapp.utils.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
-import kotlin.math.log
 
 sealed class TrainingUiState {
   object Loading : TrainingUiState()

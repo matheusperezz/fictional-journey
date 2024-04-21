@@ -26,7 +26,7 @@ fun NavGraphBuilder.mainGraph(navHostController: NavHostController) {
     ) {
         exerciseGraph(navHostController)
         trainingGraph(navHostController)
-        profileGraph(navHostController)
+        // profileGraph(navHostController)
     }
 }
 
@@ -45,10 +45,6 @@ fun NavController.navigateSingleTopWithPopUpTo(
         BottomAppBarItem.Exercise -> Pair(
             exerciseGraphRoute,
             ::navigateToExerciseGraph
-        )
-        BottomAppBarItem.Profile -> Pair(
-            profileGraphRoute,
-            ::navigateToProfileGraph
         )
     }
 

@@ -23,17 +23,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import com.example.testeapp.presentation.navigation.TesteAppNavHost
-import com.example.testeapp.presentation.navigation.exercise.createExerciseRoute
-import com.example.testeapp.presentation.navigation.exercise.exerciseDetailsRoute
-import com.example.testeapp.presentation.navigation.exercise.exerciseGraphRoute
-import com.example.testeapp.presentation.navigation.exercise.exerciseIdArgument
 import com.example.testeapp.presentation.navigation.exercise.exerciseListRoute
 import com.example.testeapp.presentation.navigation.exercise.navigateToCreateExercise
 import com.example.testeapp.presentation.navigation.profile.profileResumeRoute
 import com.example.testeapp.presentation.navigation.training.createTrainingRoute
 import com.example.testeapp.presentation.navigation.training.navigateToCreateTraining
 import com.example.testeapp.presentation.navigation.training.trainingDetailsRoute
-import com.example.testeapp.presentation.navigation.training.trainingGraphRoute
 import com.example.testeapp.presentation.navigation.training.trainingListRoute
 import com.example.testeapp.utils.TAG
 

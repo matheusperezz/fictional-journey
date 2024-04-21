@@ -1,5 +1,6 @@
 package com.example.testeapp.presentation.screens.training
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -43,6 +44,7 @@ import androidx.navigation.NavHostController
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.presentation.screens.exercises.ExerciseItem
 import com.example.testeapp.presentation.viewmodels.CreateTrainingViewModel
+import com.example.testeapp.utils.TAG
 import com.example.testeapp.utils.dateMapper
 import java.util.Calendar
 import java.util.Date
@@ -165,7 +167,7 @@ fun CreateTrainingSreen(
           viewModel.updateTraining(trainingId)
           navHostController.popBackStack()
         } else {
-          viewModel.createTraining()
+          viewModel.createTraining(navHostController.context)
           navHostController.popBackStack()
         }
       },
@@ -196,6 +198,7 @@ fun CreateTrainingSreen(
       ) {
         items(uiState.exercises) { exercise ->
           TrainingExerciseItem(exercise = exercise, onExerciseClick = {
+            Log.d(TAG, "CreateTrainingSreen enrolling $trainingId with ${it.id}")
             viewModel.enrollExerciseOnTraining(trainingId, it.id)
             showBottomSheet = false
           })

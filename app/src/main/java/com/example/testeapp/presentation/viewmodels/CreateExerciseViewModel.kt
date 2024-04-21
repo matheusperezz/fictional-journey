@@ -1,10 +1,12 @@
 package com.example.testeapp.presentation.viewmodels
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.usecases.ExerciseUseCase
+import com.example.testeapp.utils.SharedPrefManager
 import com.example.testeapp.utils.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -47,11 +49,12 @@ class CreateExerciseViewModel @Inject constructor(
     )
   }
 
-  fun createExercise(){
+  fun createExercise(context: Context){
     val exercise = Exercise(
       name = _uiState.value.name,
       image = _uiState.value.image,
-      observations = _uiState.value.observations
+      observations = _uiState.value.observations,
+      userId = SharedPrefManager(context).getUserId()!!
     )
     viewModelScope.launch {
       useCase.addExercise(exercise)

@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import com.example.testeapp.presentation.navigation.TesteAppNavHost
+import com.example.testeapp.presentation.navigation.auth.loginRoute
+import com.example.testeapp.presentation.navigation.auth.registerRoute
 import com.example.testeapp.presentation.navigation.exercise.createExerciseRoute
 import com.example.testeapp.presentation.navigation.exercise.exerciseDetailsRoute
 import com.example.testeapp.presentation.navigation.exercise.exerciseGraphRoute
@@ -64,11 +66,17 @@ fun TesteApp(
       else -> false
     }
 
+    val isShowBottomBar = when (currentRoute){
+      loginRoute, registerRoute -> false
+      else -> true
+    }
+
     TesteAppStateful(
       navController = navController,
       currentDestination = currentDestination,
       navType = navType,
-      isShowFab = isShowFab
+      isShowFab = isShowFab,
+      isShowBottomBar = isShowBottomBar
     ) {
       TesteAppNavHost(navController = navController)
     }

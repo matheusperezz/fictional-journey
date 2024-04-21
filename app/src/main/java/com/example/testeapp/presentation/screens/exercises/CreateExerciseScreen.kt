@@ -87,7 +87,7 @@ fun CreateExerciseScreen(
             viewModel.updateExercise(exerciseId)
             navHostController.popBackStack()
           } else {
-            viewModel.createExercise()
+            viewModel.createExercise(navHostController.context)
             navHostController.popBackStack()
           }
         }, modifier = Modifier.fillMaxWidth()) {

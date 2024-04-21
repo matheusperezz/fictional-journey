@@ -1,11 +1,13 @@
 package com.example.testeapp.presentation.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
 import com.example.testeapp.domain.usecases.ExerciseUseCase
 import com.example.testeapp.domain.usecases.TrainingUseCase
+import com.example.testeapp.utils.SharedPrefManager
 import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -89,13 +91,13 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  fun createTraining() {
+  fun createTraining(context: Context) {
     viewModelScope.launch {
       val training = Training(
         name = _uiState.value.name,
         description = _uiState.value.description,
         date = Timestamp(_uiState.value.date),
-        exercises = _uiState.value.trainingExercises.map { it.id }
+        userId = SharedPrefManager(context).getUserId()!!
       )
       trainingUseCase.addTraining(training)
     }

@@ -4,13 +4,15 @@ data class Exercise(
   val id: String = "",
   val name: String = "",
   val image: String = "",
-  val observations: String = ""
+  val observations: String = "",
+  val userId: String = ""
 )
 
 fun exerciseToHashMap(exercise: Exercise): HashMap<String, Any> {
   return hashMapOf(
     "name" to exercise.name,
     "image" to exercise.image,
-    "observations" to exercise.observations
+    "observations" to exercise.observations,
+    "userId" to exercise.userId
   )
 }

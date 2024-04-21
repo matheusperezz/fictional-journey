@@ -1,5 +1,6 @@
 package com.example.testeapp.di.modules
 
+import android.content.Context
 import com.example.testeapp.data.datasources.RemoteExerciseDataSource
 import com.example.testeapp.data.datasources.RemoteExerciseDataSourceImpl
 import com.example.testeapp.data.repositories.ExerciseRepositoryImpl
@@ -10,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -19,8 +21,8 @@ class ExerciseModule {
 
   @Provides
   @Singleton
-  fun provideRemoteExerciseDataSource(firestore: FirebaseFirestore): RemoteExerciseDataSource {
-    return RemoteExerciseDataSourceImpl(firestore)
+  fun provideRemoteExerciseDataSource(firestore: FirebaseFirestore, @ApplicationContext context: Context): RemoteExerciseDataSource {
+    return RemoteExerciseDataSourceImpl(firestore, context)
   }
 
   @Provides

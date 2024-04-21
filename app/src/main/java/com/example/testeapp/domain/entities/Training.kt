@@ -8,7 +8,7 @@ data class Training(
   val name: String = "",
   val description: String = "",
   val date: Timestamp = Timestamp.now(),
-  val exercises: List<String> = emptyList()
+  val userId: String = ""
 )
 
 data class TrainingPresentation(
@@ -16,7 +16,8 @@ data class TrainingPresentation(
   val name: String = "",
   val description: String = "",
   val date: Date = Date(),
-  val exercises: List<Exercise> = emptyList()
+  val exercises: List<Exercise> = emptyList(),
+  val userId: String = ""
 )
 
 fun trainingToHashMap(training: Training): HashMap<String, Any> {
@@ -24,6 +25,6 @@ fun trainingToHashMap(training: Training): HashMap<String, Any> {
     "name" to training.name,
     "description" to training.description,
     "date" to training.date,
-    "exercises" to training.exercises
+    "userId" to training.userId
   )
 }

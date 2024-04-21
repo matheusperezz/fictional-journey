@@ -1,10 +1,12 @@
 package com.example.testeapp.data.datasources
 
+import android.content.Context
 import android.util.Log
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.Training
 import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.domain.entities.trainingToHashMap
+import com.example.testeapp.utils.SharedPrefManager
 import com.example.testeapp.utils.TAG
 import com.example.testeapp.utils.TRAINING_COLLECTION
 import com.example.testeapp.utils.TRAINING_EXERCISE_COLLECTION
@@ -19,10 +21,12 @@ import javax.inject.Inject
 
 class RemoteTrainingDataSourceImpl @Inject constructor(
   private val firestore: FirebaseFirestore,
-  private val remoteExerciseDataSource: RemoteExerciseDataSource
-): RemoteTrainingDataSource {
+  private val remoteExerciseDataSource: RemoteExerciseDataSource,
+  private val context: Context
+) : RemoteTrainingDataSource {
   override suspend fun addTraining(training: Training): String {
     val trainingMap = trainingToHashMap(training)
+    val userId = SharedPrefManager(context).getUserId()
     return try {
       val documentReference = firestore.collection(TRAINING_COLLECTION).add(trainingMap).await()
       documentReference.id
@@ -33,12 +37,16 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
 
   override suspend fun getTrainings(): Flow<List<TrainingPresentation>> {
     return try {
+      val userId = SharedPrefManager(context).getUserId()
       val trainings = firestore.collection(TRAINING_COLLECTION)
         .get()
         .await()
         .documents
         .mapNotNull { document ->
           document.toObject<Training>()?.copy(id = document.id)
+        }
+        .filter { training ->
+          training.userId == userId
         }
       val mappedTrainings = trainings.map { training ->
         val exercises = getExercisesFromTrainig(training.id).first()
@@ -66,6 +74,7 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
       name = training.name,
       description = training.description,
       date = training.date.toDate(),
+      userId = training.userId,
       exercises = exercises
     )
   }
@@ -77,7 +86,7 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
       .await()
       .documents
       .mapNotNull { doc ->
-        if (doc.getString("trainingId") == id){
+        if (doc.getString("trainingId") == id) {
           doc.getString("exerciseId") as String
         } else {
           null
@@ -113,7 +122,7 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
         .await()
         .documents
         .mapNotNull { document ->
-          if (document.getString("trainingId") == trainingId){
+          if (document.getString("trainingId") == trainingId) {
             document.getString("exerciseId") as String
           } else {
             null
@@ -121,7 +130,7 @@ class RemoteTrainingDataSourceImpl @Inject constructor(
         }
       for (id in exerciseIds) {
         val exercise = remoteExerciseDataSource.getExerciseById(id)
-        if (exercise.name != ""){
+        if (exercise.name != "") {
           exercises.add(exercise)
         }
       }

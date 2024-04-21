@@ -1,9 +1,11 @@
 package com.example.testeapp.data.datasources
 
+import android.content.Context
 import android.util.Log
 import com.example.testeapp.domain.entities.Exercise
 import com.example.testeapp.domain.entities.exerciseToHashMap
 import com.example.testeapp.utils.EXERCISE_COLLECTION
+import com.example.testeapp.utils.SharedPrefManager
 import com.example.testeapp.utils.TAG
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
@@ -13,7 +15,8 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class RemoteExerciseDataSourceImpl @Inject constructor(
-  private val firestore: FirebaseFirestore
+  private val firestore: FirebaseFirestore,
+  private val context: Context
 ) : RemoteExerciseDataSource {
   override suspend fun addExercise(exercise: Exercise): String {
     val exerciseMap = exerciseToHashMap(exercise)
@@ -29,12 +32,17 @@ class RemoteExerciseDataSourceImpl @Inject constructor(
 
   override suspend fun getExercises(): Flow<List<Exercise>> {
     return try {
+      val userId = SharedPrefManager(context).getUserId()
+      Log.d(TAG, "getExercises Id Recuperado $userId")
       val exercises = firestore.collection(EXERCISE_COLLECTION)
         .get()
         .await()
         .documents
         .mapNotNull { document ->
           document.toObject<Exercise>()?.copy(id = document.id)
+        }
+        .filter { exercise ->
+          exercise.userId == userId
         }
       flowOf(exercises)
     } catch (e: Exception) {

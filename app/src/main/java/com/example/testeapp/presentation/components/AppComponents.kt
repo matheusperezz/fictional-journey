@@ -17,20 +17,27 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
+import com.example.testeapp.domain.entities.TrainingPresentation
 import com.example.testeapp.presentation.navigation.TesteAppNavHost
 import com.example.testeapp.presentation.navigation.exercise.exerciseListRoute
 import com.example.testeapp.presentation.navigation.exercise.navigateToCreateExercise
 import com.example.testeapp.presentation.navigation.profile.profileResumeRoute
 import com.example.testeapp.presentation.navigation.training.createTrainingRoute
 import com.example.testeapp.presentation.navigation.training.navigateToCreateTraining
+import com.example.testeapp.presentation.navigation.training.navigateToUpdateTraining
 import com.example.testeapp.presentation.navigation.training.trainingDetailsRoute
 import com.example.testeapp.presentation.navigation.training.trainingListRoute
+import com.example.testeapp.presentation.viewmodels.CreateTrainingViewModel
 import com.example.testeapp.utils.TAG
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 enum class NavigationType {
   EXERCISE,
@@ -78,6 +85,8 @@ fun TesteAppStateful(
   isShowFab: Boolean = true,
   isShowTopBar: Boolean = true,
   navType: NavigationType = NavigationType.EXERCISE,
+  viewModel: CreateTrainingViewModel = hiltViewModel(),
+  scope: CoroutineScope = rememberCoroutineScope(),
   content: @Composable () -> Unit
 ) {
   Scaffold(
@@ -108,7 +117,10 @@ fun TesteAppStateful(
               }
 
               NavigationType.TRAINING -> {
-                navController.navigateToCreateTraining()
+                scope.launch {
+                  val id = viewModel.createEmptyTraining()
+                  navController.navigateToUpdateTraining(id = id)
+                }
               }
 
               NavigationType.PROFILE -> {

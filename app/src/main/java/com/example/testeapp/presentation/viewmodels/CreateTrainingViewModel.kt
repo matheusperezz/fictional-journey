@@ -77,7 +77,7 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  fun getTrainingById(id: String){
+  fun getTrainingById(id: String) {
     viewModelScope.launch {
       val training = trainingUseCase.getTrainingById(id)
       _uiState.value = _uiState.value.copy(
@@ -101,7 +101,12 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  private fun getExercises(){
+  suspend fun createEmptyTraining(): String {
+    val training = Training()
+    return trainingUseCase.addTraining(training)
+  }
+
+  private fun getExercises() {
     viewModelScope.launch {
       _uiState.value = _uiState.value.copy(
         exercises = exerciseUseCase.getExercises().first()
@@ -109,7 +114,7 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  fun updateTraining(trainingId: String){
+  fun updateTraining(trainingId: String) {
     val training = Training(
       id = trainingId,
       name = _uiState.value.name,
@@ -121,7 +126,7 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  fun enrollExerciseOnTraining(trainingId: String, exerciseId: String){
+  fun enrollExerciseOnTraining(trainingId: String, exerciseId: String) {
     viewModelScope.launch {
       trainingUseCase.enrollExerciseInTraining(trainingId, exerciseId)
       val training = trainingUseCase.getTrainingById(trainingId)
@@ -131,7 +136,7 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
-  fun unrollExerciseOnTraining(trainingId: String, exerciseId: String){
+  fun unrollExerciseOnTraining(trainingId: String, exerciseId: String) {
     viewModelScope.launch {
       trainingUseCase.unrollExerciseInTraining(trainingId, exerciseId)
       val training = trainingUseCase.getTrainingById(trainingId)
@@ -141,4 +146,20 @@ class CreateTrainingViewModel @Inject constructor(
     }
   }
 
+  fun createTrainingAndEnrollExercises(callback: (String?) -> Unit) {
+    viewModelScope.launch {
+      val training = Training(
+        name = uiState.value.name,
+        description = uiState.value.description,
+        date = Timestamp(uiState.value.date),
+        exercises = uiState.value.trainingExercises.map { it.id }
+      )
+      val id = trainingUseCase.addTraining(training)
+      uiState.value.trainingExercises.forEach { exercise ->
+        trainingUseCase.enrollExerciseInTraining(id, exercise.id)
+      }
+      callback(id)
+    }
+  }
 }
+
